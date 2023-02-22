@@ -16,7 +16,7 @@ public class User implements UserDetails {
     private Long id;
 
     @Size(min = 2, message = "Minimum 2 characters")
-    private String userName;
+    private String username;
 
     @Size(min = 2, message = "Minimum 2 characters")
     private String name;
@@ -26,6 +26,7 @@ public class User implements UserDetails {
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
+//    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = ""))
     private Set<Role> roles;
 
     public User() {
@@ -43,7 +44,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userName;
+        return username;
     }
 
     @Override
@@ -74,12 +75,8 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getName() {
@@ -108,5 +105,9 @@ public class User implements UserDetails {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public void addRole(Role role) {
+        this.roles.add(role);
     }
 }
