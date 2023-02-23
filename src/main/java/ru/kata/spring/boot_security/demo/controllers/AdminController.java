@@ -1,11 +1,11 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import java.util.List;
@@ -16,8 +16,11 @@ public class AdminController {
 
     private final UserService userService;
 
-    public AdminController(UserService userService) {
+    private final RoleRepository roleRepository;
+
+    public AdminController(UserService userService, RoleRepository roleRepository) {
         this.userService = userService;
+        this.roleRepository = roleRepository;
     }
 
     @GetMapping
@@ -25,5 +28,35 @@ public class AdminController {
         List<User> users = userService.getAllUsers();
         model.addAttribute("allUsers", users);
         return "/admin";
+    }
+
+    @GetMapping("/addNewUser")
+    public String addNewUser(Model model) {
+        User user = new User();
+        model.addAttribute("user", user);
+        List<Role> roles = roleRepository.findAll();
+        model.addAttribute("allRoles", roles);
+        return "registration";
+    }
+
+    @PostMapping(value = "/saveUser")
+    public String saveUser(@ModelAttribute("user") User user) {
+        userService.saveUser(user);
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteUser(@PathVariable("id") Long id) {
+        userService.deleteUser(id);
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/update/{id}")
+    public String updateUser(@PathVariable("id") Long id, Model model) {
+        User user = userService.getUser(id);
+        model.addAttribute("user", user);
+        List<Role> roles = roleRepository.findAll();
+        model.addAttribute("allRoles", roles);
+        return "updateUser";
     }
 }

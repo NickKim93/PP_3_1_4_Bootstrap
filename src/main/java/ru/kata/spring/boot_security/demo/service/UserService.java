@@ -22,7 +22,7 @@ public class UserService implements UserDetailsService {
     private final RoleRepository roleRepository;
 
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
     public UserService(UserRepository userRepository, RoleRepository roleRepository) {
@@ -40,12 +40,12 @@ public class UserService implements UserDetailsService {
         user1.setName("Zaur");
         user1.setUsername("Zaur");
         user1.setSurname("Tregulov");
-        user1.setPassword("{bcrypt}$2y$10$4lCiHrDX.12qFM4srzJSf.juyAWMxaXoxBFi6Za74mW4vLKFDJAqm");
+        user1.setPassword(bCryptPasswordEncoder.encode("Zaur"));
         User admin1 = new User();
         admin1.setName("Ivan");
         admin1.setUsername("Ivan");
         admin1.setSurname("Ivanov");
-        admin1.setPassword("{bcrypt}$2y$10$O5cPbs9b2r.yT.FXx3789OWMUzYt2ZfHtmkJMU38RDpYWUN1X.2py");
+        admin1.setPassword(bCryptPasswordEncoder.encode("Ivan"));
         Set<Role> userRole = new HashSet<>();
         userRole.add(roleRepository.getById(1L));
         user1.setRoles(userRole);
@@ -70,7 +70,15 @@ public class UserService implements UserDetailsService {
     }
 
     public void saveUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
+    }
+
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
+
+    public User getUser(Long id) {
+        return userRepository.findById(id).orElse(null);
     }
 }

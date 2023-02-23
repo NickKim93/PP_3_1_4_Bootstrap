@@ -4,7 +4,6 @@
     <meta charset="ISO-8859-1">
     <title>My app</title>
 </head>
-<html>
 <body>
 
 <h2>All Users:</h2>
@@ -30,17 +29,18 @@
         <td th:text="${user.getPassword()}"/>
         <td th:text="${user.getRoles()}"/>
 
-<!--        <td>-->
-<!--            <a th:href="@{/update/{id}(id=${user.id})}">Update</a>-->
-<!--            <a th:href="@{/delete/{id}(id=${user.id})}">Delete</a>-->
-<!--        </td>-->
+        <td>
+            <a th:href="@{/admin/update/{id}(id=${user.id})}">Update</a>
+            <a th:href="@{/admin/delete/{id}(id=${user.id})}">Delete</a>
+        </td>
     </tr>
     </tbody>
 </table>
 <br>
-<a th:href="@{/logout}">Logout</a>
-<!--<input type="button" value="Add"-->
-<!--       onclick="window.location.href = 'addNewUser'"/>-->
 
+<input type="button" value="Add"
+       onclick="window.location.href = 'admin/addNewUser'"/>
+<br><br>
+<a th:href="@{/logout}">Logout</a>
 </body>
 </html>
