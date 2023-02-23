@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>My app</title>
+</head>
+<html>
+<body>
+
+<h2>All Users:</h2>
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Username</th>
+        <th scope="col">Name</th>
+        <th scope="col">Surname</th>
+        <th scope="col">Password</th>
+        <th scope="col">Roles</th>
+        <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user: ${allUsers}">
+        <td th:text="${user.getId()}"/>
+        <td th:text="${user.getUsername()}"/>
+        <td th:text="${user.getName()}"/>
+        <td th:text="${user.getSurname()}"/>
+        <td th:text="${user.getPassword()}"/>
+        <td th:text="${user.getRoles()}"/>
+
+<!--        <td>-->
+<!--            <a th:href="@{/update/{id}(id=${user.id})}">Update</a>-->
+<!--            <a th:href="@{/delete/{id}(id=${user.id})}">Delete</a>-->
+<!--        </td>-->
+    </tr>
+    </tbody>
+</table>
+<br>
+<a th:href="@{/logout}">Logout</a>
+<!--<input type="button" value="Add"-->
+<!--       onclick="window.location.href = 'addNewUser'"/>-->
+
+</body>
+</html>
