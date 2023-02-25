@@ -8,6 +8,7 @@
 <h2>Update User's Information</h2>
 
 <form action="#" th:action="@{/admin/saveUser}" th:object="${user}" method="post">
+    <input type="hidden" th:field="*{id}"/>
     <label th:for="username">Username</label>
     <input type="text" th:field="*{username}" id="username">
     </br>
