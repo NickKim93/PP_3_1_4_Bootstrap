@@ -112,4 +112,23 @@ public class User implements UserDetails {
     public void addRole(Role role) {
         this.roles.add(role);
     }
+
+    public String getRolesToString() {
+        StringBuilder roleNames = new StringBuilder();
+        for (Role role : getRoles()) {
+            roleNames.append(role.getName())
+                    .append(", ");
+        }
+        return roleNames.toString()
+                .replaceAll(", $", "").replace("ROLE_", "");
+    }
+
+    public boolean hasRole(String roleName) {
+        if (roles.stream()
+                .map(Role::getName)
+                .anyMatch(r -> r.equals(roleName))) {
+            return true;
+        }
+        return false;
+    }
 }

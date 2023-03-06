@@ -1,13 +1,17 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -24,23 +28,32 @@ public class AdminController {
     }
 
     @GetMapping
-    public String showAllUsers(Model model){
+    public String showAllUsers(Model model, Authentication authentication){
         List<User> users = userService.getAllUsers();
         model.addAttribute("allUsers", users);
+        User user = (User) authentication.getPrincipal();
+        model.addAttribute("user", user);
+        User user1 = new User();
+        model.addAttribute("user1", user1);
+        List<Role> roles = roleRepository.findAll();
+        model.addAttribute("allRoles", roles);
         return "/admin";
     }
 
-    @GetMapping("/addNewUser")
-    public String addNewUser(Model model) {
-        User user = new User();
-        model.addAttribute("user", user);
-        List<Role> roles = roleRepository.findAll();
-        model.addAttribute("allRoles", roles);
-        return "registration";
-    }
+//    @GetMapping("/addNewUser")
+//    public String addNewUser(Model model) {
+//        User user = new User();
+//        model.addAttribute("user", user);
+//        List<Role> roles = roleRepository.findAll();
+//        model.addAttribute("allRoles", roles);
+//        return "registration";
+//    }
 
     @PostMapping(value = "/saveUser")
-    public String saveUser(@ModelAttribute("user") User user) {
+    public String saveUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "redirect:/admin";
+        }
         userService.saveUser(user);
         return "redirect:/admin";
     }
