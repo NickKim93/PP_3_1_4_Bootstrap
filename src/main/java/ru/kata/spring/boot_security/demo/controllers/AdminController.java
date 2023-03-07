@@ -1,6 +1,5 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,25 +28,15 @@ public class AdminController {
 
     @GetMapping
     public String showAllUsers(Model model, Authentication authentication){
-        List<User> users = userService.getAllUsers();
-        model.addAttribute("allUsers", users);
+        model.addAttribute("allUsers", userService.getAllUsers());
         User user = (User) authentication.getPrincipal();
-        model.addAttribute("user", user);
+        model.addAttribute("userAuth", user);
         User user1 = new User();
-        model.addAttribute("user1", user1);
+        model.addAttribute("user", user1);
         List<Role> roles = roleRepository.findAll();
         model.addAttribute("allRoles", roles);
         return "/admin";
     }
-
-//    @GetMapping("/addNewUser")
-//    public String addNewUser(Model model) {
-//        User user = new User();
-//        model.addAttribute("user", user);
-//        List<Role> roles = roleRepository.findAll();
-//        model.addAttribute("allRoles", roles);
-//        return "registration";
-//    }
 
     @PostMapping(value = "/saveUser")
     public String saveUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult) {
@@ -64,12 +53,10 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @GetMapping("/update/{id}")
-    public String updateUser(@PathVariable("id") Long id, Model model) {
-        User user = userService.getUser(id);
-        List<Role> roles = roleRepository.findAll();
-        model.addAttribute("user", user);
-        model.addAttribute("allRoles", roles);
-        return "updateUser";
+    @PostMapping("/update/{id}")
+    public String updateUser(@PathVariable("id") Long id, @ModelAttribute("user") User user) {
+        user.setId(id);
+        userService.saveUser(user);
+        return "redirect:/admin";
     }
 }
